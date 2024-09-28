@@ -1,0 +1,8 @@
+# Ignore byte-compiled files and backup files
+*.elc
+*~
+.#*
+
+# Ignore package-related files
+elpa/
+straight/
