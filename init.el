@@ -38,7 +38,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    '("c7fd1708e08544d1df2cba59b85bd25263180b19b287489d4f17b9118487e718" default))
- '(package-selected-packages '(monokai-theme company drag-stuff obsidian)))
+ '(package-selected-packages '(monokai-theme company drag-stuff)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -47,3 +47,21 @@
  )
 
 (load-theme 'monokai t)
+
+(global-unset-key (kbd "<left>"))
+(global-unset-key (kbd "<right>"))
+(global-unset-key (kbd "<up>"))
+(global-unset-key (kbd "<down>"))
+(global-unset-key (kbd "<C-left>"))
+(global-unset-key (kbd "<C-right>"))
+(global-unset-key (kbd "<C-up>"))
+(global-unset-key (kbd "<C-down>"))
+(global-unset-key (kbd "<M-left>"))
+(global-unset-key (kbd "<M-right>"))
+(global-unset-key (kbd "<M-up>"))
+(global-unset-key (kbd "<M-down>"))
+
+(setq backup-directory-alist '(("." . "~/.emacs-saves")))                                
+(setq auto-save-file-name-transforms '((".*" "~/.emacs-saves" t)))
+
+(setq lock-file-name-transforms `((".*" "~/.emacs-lockfiles/" t)))
