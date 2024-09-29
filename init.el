@@ -1,6 +1,6 @@
 ;; Remove the startup screen and scratch message
-(qsetq inhibit-startup-message t)
-(qsetq initial-scratch-message nil)
+(setq inhibit-startup-message t)
+(setq initial-scratch-message nil)
 
 ;; Remove the menu bar
 (menu-bar-mode -1)
