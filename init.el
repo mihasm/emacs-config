@@ -5,6 +5,13 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
+(setq mac-command-modifier 'control)
+(global-set-key (kbd "C-c C-c") 'kill-ring-save) ;; Map C-c to copy
+(global-set-key (kbd "C-z") 'undo-only)
+(global-set-key (kbd "C-y") 'undo-redo)
+(global-set-key (kbd "C-v") 'yank)
+(global-set-key (kbd "C-c RET") 'set-mark-command) ;; Where RET = C-m due to historical reasons
+
 ;; Remove the startup screen and scratch message
 (setq inhibit-startup-message t)
 (setq initial-scratch-message nil)
@@ -21,6 +28,16 @@
 
 ;; Set initial mode to text-mode
 (setq initial-major-mode 'text-mode)
+
+;; Enable line numbers only in programming modes
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
+(setq display-line-numbers-type 'relative) ;; Use relative line numbers
+
+;; Remove weird shortcuts
+(global-unset-key (kbd "C-w")) ;; removes shortcut for delete until end of buffer
+
+;; Show welcome text on startup
+(find-file (concat user-emacs-directory "emacs_welcome"))
 
 ;; Enable MELPA for package management
 (require 'package)
@@ -91,22 +108,20 @@
             (lambda ()
               (local-set-key (kbd "C-c C-o") 'obsidian-follow-link-at-point)
               (local-set-key (kbd "C-c C-l") 'obsidian-insert-wikilink)
-              (local-set-key (kbd "C-c C-b") 'obsidian-backlink-jump))))
+              (local-set-key (kbd "C-c C-b") 'obsidian-backlink-jump)))
+)
 
 ;; Multiple cursors
 (use-package multiple-cursors
   :ensure t
   :bind (("C-d" . mc/mark-next-like-this)
-         ("C-c C-d" . mc/mark-all-like-this)))
+         ("C-c C-d" . mc/mark-all-like-this))
+)
 
 (defun force-global-C-d ()
   (local-set-key (kbd "C-d") 'mc/mark-next-like-this))
 (add-hook 'after-change-major-mode-hook 'force-global-C-d)
 
-;; Company mode
-(use-package company
-  :ensure t
-  :hook (after-init . global-company-mode))
 
 ;; Shell mode shortcuts
 (add-hook 'shell-mode-hook
@@ -129,33 +144,22 @@
       (setq compile-command (format "gcc %s -o %s" file output-file)))))
 (add-hook 'c-mode-hook 'set-compile-command-for-c)
 
-;; ggtags for navigation in C/C++
-(use-package ggtags
-  :ensure t
-  :hook ((c-mode c++-mode) . ggtags-mode))
-(global-set-key (kbd "M-.") 'ggtags-find-definition)
-(global-set-key (kbd "M-,") 'pop-tag-mark)
-(setq gtags-suggested-key-mapping t)
-(setq ggtags-include-directories '("/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include"))
-(global-set-key (kbd "C-c g") (lambda () (interactive) (shell-command "gtags --incremental")))
-
-;; Disable mouse interactions globally
-(use-package disable-mouse
-  :ensure t
-  :config
-  (global-disable-mouse-mode))
-
 ;; Poet theme
 (use-package poet-theme
   :ensure t
-  ;:config
-  ;(load-theme 'poet t)
-  ;; Enable variable-pitch-mode in text modes (org-mode, markdown-mode, etc.)
-  ;(add-hook 'text-mode-hook
-  ;          (lambda ()
-  ;            (variable-pitch-mode 1)))
-  ;; Set custom fonts for different text faces
-  ;(set-face-attribute 'default nil :family "DejaVu Sans Mono" :height 130)
-  ;(set-face-attribute 'fixed-pitch nil :family "DejaVu Sans Mono")
-  ;(set-face-attribute 'variable-pitch nil :family "IBM Plex Serif")
+)
+
+;; Eglot - LSP client built into Emacs 29+
+(use-package eglot
+  :ensure nil  ;; Since eglot is already included, no need to install
+  :config
+  ;; Add a list of language servers to be used
+  (add-to-list 'eglot-server-programs
+               '((c-mode c++-mode) . ("clangd")))
+  (add-to-list 'eglot-server-programs
+               '((python-mode) . ("pylsp")))
+  ;; Start Eglot automatically when opening a supported file
+  (add-hook 'c-mode-hook 'eglot-ensure)
+  (add-hook 'c++-mode-hook 'eglot-ensure)
+  (add-hook 'python-mode-hook 'eglot-ensure)
   )
