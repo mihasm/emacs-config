@@ -1,3 +1,7 @@
+;; Show welcome text on startup
+(find-file (concat user-emacs-directory "emacs_welcome.org"))
+
+;; Enable MELPA for package management
 ;; Load custom settings from a separate file
 (setq custom-file (concat user-emacs-directory "custom.el"))
 
@@ -39,10 +43,6 @@
 ;; Remove weird shortcuts
 (global-unset-key (kbd "C-w")) ;; removes shortcut for delete until end of buffer
 
-;; Show welcome text on startup
-(find-file (concat user-emacs-directory "emacs_welcome.org"))
-
-;; Enable MELPA for package management
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
