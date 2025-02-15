@@ -10,6 +10,8 @@
 (global-set-key (kbd "C-z") 'undo-only)
 (global-set-key (kbd "C-y") 'undo-redo)
 (global-set-key (kbd "C-v") 'yank)
+(global-set-key (kbd "C-M-p") 'scroll-down-command)
+(global-set-key (kbd "C-M-n") 'scroll-up-command)
 (global-set-key (kbd "C-c RET") 'set-mark-command) ;; Where RET = C-m due to historical reasons
 
 ;; Remove the startup screen and scratch message
@@ -22,6 +24,7 @@
 (if (fboundp 'set-fringe-mode) (set-fringe-mode 0))
 (tool-bar-mode -1)
 (icomplete-mode 1)
+(global-unset-key (kbd "C-<down-mouse-1>")) ;; some weird buffer menu
 
 ;; Auto-revert buffers when files change externally
 (global-auto-revert-mode t)
@@ -37,7 +40,7 @@
 (global-unset-key (kbd "C-w")) ;; removes shortcut for delete until end of buffer
 
 ;; Show welcome text on startup
-(find-file (concat user-emacs-directory "emacs_welcome"))
+(find-file (concat user-emacs-directory "emacs_welcome.org"))
 
 ;; Enable MELPA for package management
 (require 'package)
@@ -163,3 +166,23 @@
   (add-hook 'c++-mode-hook 'eglot-ensure)
   (add-hook 'python-mode-hook 'eglot-ensure)
   )
+
+;; Org mode settings
+(use-package org-download
+  :ensure t
+)
+(require 'org-download)
+(pixel-scroll-precision-mode 1)
+(org-display-inline-images 1)
+(setq-default org-download-heading-lvl nil)
+(setq-default org-download-image-dir "./images")
+
+;; Dired
+(require 'dired)
+(put 'dired-find-alternate-file 'disabled nil)
+(define-key dired-mode-map (kbd "<mouse-2>") 'dired-find-alternate-file)
+
+(require 'dired-x)
+(setq dired-omit-files "^\\...+$")
+(add-hook 'dired-mode-hook (lambda () (dired-omit-mode 1)))
+(local-set-key (kbd "M-o") 'dired-omit-mode)
