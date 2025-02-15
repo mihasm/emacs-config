@@ -1,3 +1,3 @@
 ```
-cd ~; mkdir emacs.d; git clone https://github.com/mihasm/emacs-config.git .;
+cd ~; mkdir emacs.d; cd emacs.d; git clone https://github.com/mihasm/emacs-config.git .;
 ```
