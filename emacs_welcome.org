@@ -1,0 +1,76 @@
+* Welcome to Emacs!
+
+** Basic Commands
+
+*** File Operations
+
+Open a file = C-x C-f  
+Save the current file = C-x C-s  
+Save as a new file = C-x C-w  
+Exit Emacs = C-x C-c  
+
+*** Buffer Management
+
+Switch buffer = C-x b  
+List buffers = C-x C-b  
+Kill buffer = C-x k  
+
+*** Navigation
+
+Scroll up = C-M-p  
+Scroll down = C-M-n  
+Yank (paste) = C-v  
+Go to line = M-g g  
+
+*** Editing
+
+Copy = C-c C-c  
+Undo = C-z  
+Redo = C-y  
+Select next occurrence (Multiple cursors) = C-d  
+
+*** Windows and Frames
+
+Close window = C-x 0  
+Keep only current window = C-x 1  
+Split window horizontally = C-x 2  
+Split window vertically = C-x 3  
+
+*** Help Shortcuts
+
+Emacs tutorial = C-h t  
+Describe keybinding = C-h k  
+Describe function = C-h f  
+Describe variable = C-h v  
+Describe current mode = C-h m  
+
+** Custom Keybindings & Changes
+
+*** Custom Keybindings
+
+Set mark = C-c RET  
+Select all occurrences (Multiple cursors) = C-c C-d  
+Move line down = ESC down  
+Move line up = ESC up  
+
+*** Disabled Keys
+
+Disabled for movement = left, right, up, down  
+Removed buffer menu shortcut = C-down-mouse-1  
+Unset = C-w  
+
+** Startup Configuration
+
+Startup screen disabled  
+Initial buffer set to text-mode  
+Auto-revert mode enabled  
+
+** Dired Enhancements
+
+Toggle hidden files = M-o  
+Open file in same buffer = mouse-2  
+Auto-omit dotfiles enabled  
+
+This file serves as a quick reference and will be updated as modifications occur in the init file.
+
+
