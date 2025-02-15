@@ -1,4 +1,4 @@
 ```
 mkdir ~\emacs.d\
-git clone this repo .
+git clone https://github.com/mihasm/emacs-config.git .
 ```
