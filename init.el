@@ -20,6 +20,7 @@
 (delete-selection-mode 1)
 (electric-indent-mode 0)
 (setq mac-command-modifier 'control)
+(setq mode-line-percent-position "") ;; Remove percentage
 
 ;; Enable relative line numbers globally
 (setq display-line-numbers-type 'relative) ;; Use relative numbers
@@ -35,20 +36,14 @@
 (global-unset-key (kbd "<C-left>"))
 (global-unset-key (kbd "<C-right>"))
 (global-unset-key (kbd "<C-up>"))
-(global-unset-key (kbd "<C-down>"))
 
-;; ==============================
-;; INDENTATION
-;; ==============================
-
-(defun my-indent-info ()
-  "Show current indentation style in the mode line."
-  (if indent-tabs-mode
-      (format " TAB:%d " tab-width)
-    (format " SP:%d " tab-width)))
-
+;; Customize mode line
 (setq-default mode-line-format
-              (append mode-line-format '((:eval (my-indent-info)))))
+  '("%e"  ;; Error message indicator
+    " " mode-line-buffer-identification
+    "  " mode-line-position
+    ;;"  " (vc-mode vc-mode)  ;; This shows Git, REMOVE IT
+    "  " minions-mode-line-modes))  ;; Show hidden minor modes via Minions
 
 ;; ==============================
 ;; KEYBINDINGS
@@ -74,7 +69,7 @@
 (define-key shrcts-mode-map (kbd "M-p") (lambda () (interactive) (next-line -10)))
 (define-key shrcts-mode-map (kbd "M-n") (lambda () (interactive) (next-line 10)))
 (define-key shrcts-mode-map (kbd "C-c C-x")
-	    (lambda ()
+	        (lambda ()
               (interactive)
               (when (use-region-p)
                 (clipboard-kill-ring-save (region-beginning) (region-end))
@@ -112,9 +107,9 @@
         (when (window-live-p dired-preview-window)
           (delete-window dired-preview-window)
           (setq dired-preview-window nil)))) ;; Properly reset the window variable
-    (setq dired-preview-mode-active t)
-    (add-hook 'post-command-hook 'dired-preview-update nil t)
-    (dired-preview-update))
+  (setq dired-preview-mode-active t)
+  (add-hook 'post-command-hook 'dired-preview-update nil t)
+  (dired-preview-update))
 
 (defun dired-preview-update ()
   "Update the preview window based on the selected file/folder."
@@ -198,6 +193,59 @@
       lock-file-name-transforms `((".*" ,lock-file-directory t)))
 
 ;; ==============================
+;; INDENTATION SETTINGS
+;; ==============================
+
+;; Use spaces instead of tabs for indentation
+(setq-default indent-tabs-mode nil)
+
+;; Set the number of spaces per indentation level
+(setq-default tab-width 4)
+
+;; Automatically detect indentation settings based on file contents
+(use-package dtrt-indent
+  :ensure t
+  :config
+  (dtrt-indent-global-mode 1))
+
+;; Function to indent the selected region or the current line
+(defun my-indent ()
+  "Indent the region if active, otherwise the current line."
+  (interactive)
+  (if (use-region-p)
+      (indent-rigidly (region-beginning) (region-end) tab-width)
+    (indent-rigidly (line-beginning-position) (line-end-position) tab-width)))
+
+;; Function to unindent the selected region or the current line
+(defun my-unindent ()
+  "Unindent the region if active, otherwise the current line."
+  (interactive)
+  (if (use-region-p)
+      (indent-rigidly (region-beginning) (region-end) (- tab-width))
+    (indent-rigidly (line-beginning-position) (line-end-position) (- tab-width))))
+
+;; Override the TAB key to indent
+(global-set-key (kbd "TAB") 'my-indent)
+
+;; Bind Shift-TAB (Backtab) to unindent
+(global-set-key (kbd "<backtab>") 'my-unindent)
+
+;; ==============================
+;; MODE LINE INDENTATION INFO
+;; ==============================
+
+(defun my-indent-mode-line-info ()
+  "Return current indentation mode for display in the mode line."
+  (if indent-tabs-mode
+      (format "T%d" tab-width) ;; ␉ symbol for tabs
+    (format "S%d" tab-width))) ;; ␠ symbol for spaces
+
+;; Add indentation info to the mode line
+(setq-default mode-line-format
+              (append mode-line-format
+                      '((:eval (my-indent-mode-line-info)))))
+
+;; ==============================
 ;; ADDITIONAL PACKAGES
 ;; ==============================
 (use-package drag-stuff
@@ -266,4 +314,24 @@
   :defer t
   :config
   (setq treemacs-is-never-other-window t)
-  (define-key shrcts-mode-map (kbd "M-0") 'treemacs-select-window))
+  
+  ;; Custom function to toggle Treemacs or select its window
+  (defun my-treemacs-toggle-or-select ()
+    "Open Treemacs if it's not running, otherwise select its window."
+    (interactive)
+    (if (treemacs-current-visibility)
+        (treemacs-select-window)
+      (treemacs))))
+
+(define-key shrcts-mode-map (kbd "M-0") 'treemacs)
+
+(use-package minions
+  :ensure t
+  :config
+  (minions-mode 1)
+  :bind ("M-m" . minions-minor-modes-menu))
+
+(add-hook 'after-init-hook
+          (lambda ()
+            (minions-mode 1)
+            (force-mode-line-update)))

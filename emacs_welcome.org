@@ -2,16 +2,19 @@
 
 *** File Operations
 
-| Open a file           | C-x C-f |
-| Save the current file | C-x C-s |
-| Save as a new file    | C-x C-w |
-| Exit Emacs            | C-x C-c |
+| Open a file           | C-x C-f              |
+| Save the current file | C-x C-s              |
+| Save as a new file    | C-x C-w              |
+| Exit Emacs            | C-x C-c              |
+| Change theme          | M-x customize-themes |
 
 *** Buffer Management
 
 | Switch buffer | C-x b   |
 | List buffers  | C-x C-b |
 | Kill buffer   | C-x k   |
+| See active minor modes | M-m |
+
 
 *** Windows and Frames
 
@@ -68,7 +71,6 @@
 
 *** Treemacs sidebar
 
-| Enable sidebar    | M-x treemacs |
-| Switch to sidebar | M-0          |
-| Add project       | C-c C-p a    |
-| Remove project    | C-c C-p d    |
+| Show sidebar   | M-0       |
+| Add project    | C-c C-p a |
+| Remove project | C-c C-p d |
