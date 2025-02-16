@@ -335,3 +335,40 @@
           (lambda ()
             (minions-mode 1)
             (force-mode-line-update)))
+
+(use-package pdf-tools
+  :ensure t)
+
+(use-package markdown-mode
+  :ensure t
+  :config
+(add-hook 'markdown-mode-hook #'markdown-toggle-inline-images)
+(setq markdown-enable-wiki-links t)  ;; Enable wiki-style links
+(setq markdown-follow-wiki-link-on-enter t)  ;; Follow link on Enter key
+
+)
+
+;; ==============================
+;; CUSTOM MINOR MODES
+;; ==============================
+
+(define-minor-mode md-pretty-mode
+  "Minor mode for pretty-printing Markdown files in Emacs."
+  :lighter " MD-Pretty"
+  :global nil
+  (if md-pretty-mode
+      (progn
+        (visual-line-mode 1)
+        (variable-pitch-mode 1)
+        (setq-local left-margin-width 10)
+        (setq-local right-margin-width 10)
+        (set-window-buffer (selected-window) (current-buffer)))
+    (progn
+      (visual-line-mode -1)
+      (variable-pitch-mode -1)
+      (setq-local left-margin-width 0)
+      (setq-local right-margin-width 0)
+      (set-window-buffer (selected-window) (current-buffer)))))
+
+(provide 'md-pretty-mode)
+(add-hook 'markdown-mode-hook #'md-pretty-mode)
