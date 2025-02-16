@@ -3,14 +3,17 @@
 ;; ==============================
 ;; BASIC SETTINGS
 ;; ==============================
+(setq custom-file (concat user-emacs-directory "custom.el"))
+(when (file-exists-p custom-file)
+  (load custom-file))
+(tool-bar-mode -1)
+(find-file (concat user-emacs-directory "emacs_welcome.org"))
 (setq inhibit-startup-message t
       initial-scratch-message nil
       initial-major-mode 'text-mode)
-
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if (fboundp 'set-fringe-mode) (set-fringe-mode 0))
-(tool-bar-mode -1)
+(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (pixel-scroll-precision-mode 1)
 (icomplete-mode 1)
 (global-auto-revert-mode t)
@@ -28,8 +31,9 @@
 (global-unset-key (kbd "<C-up>"))
 (global-unset-key (kbd "<C-down>"))
 
+
 ;; ==============================
-;; CUSTOM MINOR MODE FOR SHORTCUTS (shrcts-mode)
+;; KEYBINDINGS
 ;; ==============================
 (defvar shrcts-mode-map (make-sparse-keymap) "Keymap for shrcts minor mode.")
 
@@ -42,9 +46,6 @@
 ;; Ensure shrcts-mode is always enabled
 (shrcts-mode 1)
 
-;; ==============================
-;; KEYBINDINGS
-;; ==============================
 (define-key shrcts-mode-map (kbd "C-c C-c") 'kill-ring-save)
 (define-key shrcts-mode-map (kbd "C-z") 'undo-only)
 (define-key shrcts-mode-map (kbd "C-y") 'undo-redo)
@@ -156,12 +157,3 @@
   :config
   (setq undo-tree-auto-save-history t
         undo-tree-history-directory-alist `(("." . ,(concat user-emacs-directory "undo-tree/")))))
-
-;; ==============================
-;; FINAL SETTINGS
-;; ==============================
-(setq custom-file (concat user-emacs-directory "custom.el"))
-(when (file-exists-p custom-file)
-  (load custom-file))
-
-(find-file (concat user-emacs-directory "emacs_welcome.org"))
