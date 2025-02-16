@@ -1,7 +1,5 @@
 * Welcome to Emacs!
 
-** Basic Commands
-
 *** File Operations
 
 | Open a file           | C-x C-f |
@@ -14,6 +12,14 @@
 | Switch buffer | C-x b   |
 | List buffers  | C-x C-b |
 | Kill buffer   | C-x k   |
+
+*** Windows and Frames
+
+| Close window              | C-x 0 or C-w |
+| Keep only current window  | C-x 1        |
+| Split window horizontally | C-x 2        |
+| Split window vertically   | C-x 3        |
+| Switch window             | C-x o        |
 
 *** Navigation
 
@@ -37,16 +43,12 @@
 | Select next occurrence | C-d             |
 | Select all             | C-x h           |
 | Select & move cursor   | C-S-p/n/f/b/a/e |
+| Set mark               | C-c RET         |
+| Select all occurrences | C-c C-d         |
+| Move line down         | ESC down        |
+| Move line up           | ESC up          |
 
-*** Windows and Frames
-
-| Close window              | C-x 0 or C-w |
-| Keep only current window  | C-x 1        |
-| Split window horizontally | C-x 2        |
-| Split window vertically   | C-x 3        |
-
-
-*** Help Shortcuts
+*** Help
 
 | Emacs tutorial        | C-h t |
 | Describe keybinding   | C-h k |
@@ -54,19 +56,18 @@
 | Describe variable     | C-h v |
 | Describe current mode | C-h m |
 
-** Custom Keybindings & Changes
+*** Dired
 
-*** Custom Keybindings
-
-| Set mark                   | C-c RET  |
-| Select all occurrences     | C-c C-d  |
-| Move line down             | ESC down |
-| Move line up               | ESC up   |
-
-** Dired
-
+| Start dired mode      | C-x d   |
 | Toggle hidden files   | M-o     |
 | Set file for deletion | d       |
 | Execute deletion      | x       |
 | Create directory      | +       |
 | Create file           | C-x C-f |
+| Toggle preview mode   | SPACE   |
+
+*** Treemacs sidebar
+
+| Enable sidebar    | M-x treemacs |
+| Switch to sidebar | M-0          |
+| Change root       | C-c C-p a    |

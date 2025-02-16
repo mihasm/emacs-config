@@ -246,3 +246,10 @@
         undo-tree-history-directory-alist `(("." . ,(concat user-emacs-directory "undo-tree/"))))
   (define-key shrcts-mode-map (kbd "C-z") 'undo-tree-undo)
   (define-key shrcts-mode-map (kbd "C-y") 'undo-tree-redo))
+
+(use-package treemacs
+  :ensure t
+  :defer t
+  :config
+  (setq treemacs-is-never-other-window t)
+  (define-key shrcts-mode-map (kbd "M-0") 'treemacs-select-window))
