@@ -18,6 +18,7 @@
 (icomplete-mode 1)
 (global-auto-revert-mode t)
 (delete-selection-mode 1)
+(electric-indent-mode 0)
 (setq mac-command-modifier 'control)
 
 ;; Enable relative line numbers globally
@@ -35,6 +36,19 @@
 (global-unset-key (kbd "<C-right>"))
 (global-unset-key (kbd "<C-up>"))
 (global-unset-key (kbd "<C-down>"))
+
+;; ==============================
+;; INDENTATION
+;; ==============================
+
+(defun my-indent-info ()
+  "Show current indentation style in the mode line."
+  (if indent-tabs-mode
+      (format " TAB:%d " tab-width)
+    (format " SP:%d " tab-width)))
+
+(setq-default mode-line-format
+              (append mode-line-format '((:eval (my-indent-info)))))
 
 ;; ==============================
 ;; KEYBINDINGS
@@ -60,11 +74,11 @@
 (define-key shrcts-mode-map (kbd "M-p") (lambda () (interactive) (next-line -10)))
 (define-key shrcts-mode-map (kbd "M-n") (lambda () (interactive) (next-line 10)))
 (define-key shrcts-mode-map (kbd "C-c C-x")
-                (lambda ()
-                  (interactive)
-                  (when (use-region-p)
-                    (clipboard-kill-ring-save (region-beginning) (region-end))
-                    (kill-region (region-beginning) (region-end)))))
+	    (lambda ()
+              (interactive)
+              (when (use-region-p)
+                (clipboard-kill-ring-save (region-beginning) (region-end))
+                (kill-region (region-beginning) (region-end)))))
 (define-key shrcts-mode-map (kbd "C-w") 'delete-window)
 (defun my-delete-line ()
   "Delete from point to end of line. If the line is empty, delete the whole line."
@@ -208,20 +222,20 @@
   :bind (("C-d" . mc/mark-next-like-this)
          ("C-c C-d" . mc/mark-all-like-this)))
 
-(use-package exec-path-from-shell
-  :ensure t
-  :config
-  (when (memq window-system '(mac ns x))
-    (exec-path-from-shell-initialize)))
+;; (use-package exec-path-from-shell
+;;   :ensure t
+;;   :config
+;;   (when (memq window-system '(mac ns x))
+;;     (exec-path-from-shell-initialize)))
 
-(use-package eglot
-  :ensure nil
-  :config
-  (add-to-list 'eglot-server-programs '((c-mode c++-mode) . ("clangd")))
-  (add-to-list 'eglot-server-programs '((python-mode) . ("pylsp")))
-  (add-hook 'c-mode-hook 'eglot-ensure)
-  (add-hook 'c++-mode-hook 'eglot-ensure)
-  (add-hook 'python-mode-hook 'eglot-ensure))
+;; (use-package eglot
+;;   :ensure nil
+;;   :config
+;;   (add-to-list 'eglot-server-programs '((c-mode c++-mode) . ("clangd")))
+;;   (add-to-list 'eglot-server-programs '((python-mode) . ("pylsp")))
+;;   (add-hook 'c-mode-hook 'eglot-ensure)
+;;   (add-hook 'c++-mode-hook 'eglot-ensure)
+;;   (add-hook 'python-mode-hook 'eglot-ensure))
 
 (use-package company
   :ensure t

@@ -70,4 +70,5 @@
 
 | Enable sidebar    | M-x treemacs |
 | Switch to sidebar | M-0          |
-| Change root       | C-c C-p a    |
+| Add project       | C-c C-p a    |
+| Remove project    | C-c C-p d    |
