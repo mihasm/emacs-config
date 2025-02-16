@@ -17,10 +17,15 @@
 (pixel-scroll-precision-mode 1)
 (icomplete-mode 1)
 (global-auto-revert-mode t)
+(delete-selection-mode 1)
 (setq mac-command-modifier 'control)
 
+;; Enable relative line numbers globally
+(setq display-line-numbers-type 'relative) ;; Use relative numbers
+(setq display-line-numbers-exempt-modes '(org-mode))
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
+
 ;; Disable default keybindings
-(global-unset-key (kbd "C-w"))
 (global-unset-key (kbd "C-<down-mouse-1>"))
 (global-unset-key (kbd "<left>"))
 (global-unset-key (kbd "<right>"))
@@ -30,7 +35,6 @@
 (global-unset-key (kbd "<C-right>"))
 (global-unset-key (kbd "<C-up>"))
 (global-unset-key (kbd "<C-down>"))
-
 
 ;; ==============================
 ;; KEYBINDINGS
@@ -62,6 +66,89 @@
                     (clipboard-kill-ring-save (region-beginning) (region-end))
                     (kill-region (region-beginning) (region-end)))))
 (define-key shrcts-mode-map (kbd "C-w") 'delete-window)
+(defun my-delete-line ()
+  "Delete from point to end of line. If the line is empty, delete the whole line."
+  (interactive)
+  (if (save-excursion
+        (beginning-of-line)
+        (looking-at-p "^[ \t]*$"))
+      (delete-region (line-beginning-position) (min (point-max) (1+ (line-end-position))))
+    (delete-region (point) (line-end-position))))
+
+(define-key shrcts-mode-map (kbd "C-k") 'my-delete-line)
+(define-key shrcts-mode-map (kbd "M-P") 'beginning-of-buffer)
+(define-key shrcts-mode-map (kbd "M-N") 'end-of-buffer)
+
+;; ==============================
+;; DIRED
+;; ==============================
+(defvar dired-preview-mode-active nil
+  "Indicates if Dired Preview Mode is active.")
+
+(defvar dired-preview-window nil
+  "Stores the preview window so it can be reused.")
+
+(defun dired-preview-toggle ()
+  "Toggle Dired Preview Mode."
+  (interactive)
+  (if dired-preview-mode-active
+      (progn
+        (setq dired-preview-mode-active nil)
+        (remove-hook 'post-command-hook 'dired-preview-update t)
+        (when (window-live-p dired-preview-window)
+          (delete-window dired-preview-window)
+          (setq dired-preview-window nil)))) ;; Properly reset the window variable
+    (setq dired-preview-mode-active t)
+    (add-hook 'post-command-hook 'dired-preview-update nil t)
+    (dired-preview-update))
+
+(defun dired-preview-update ()
+  "Update the preview window based on the selected file/folder."
+  (when (and dired-preview-mode-active (eq major-mode 'dired-mode))
+    (let ((file (dired-get-file-for-visit)))
+      (if (file-directory-p file)
+          (dired-preview-show-dired file)
+        (dired-preview-show-file file)))))
+
+(defun dired-preview-show-dired (dir)
+  "Show a Dired buffer for DIR in the preview window, reusing the same window."
+  (let ((buf (dired-noselect dir)))
+    (dired-preview-display-buffer buf)))
+
+(defun dired-preview-show-file (file)
+  "Show a read-only preview of FILE in the preview window, reusing the same buffer."
+  (let ((buf (get-buffer-create "*Dired Preview*")))
+    (with-current-buffer buf
+      (setq buffer-read-only t)
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (insert-file-contents file)))
+    (dired-preview-display-buffer buf)))
+
+(defun dired-preview-display-buffer (buf)
+  "Display BUF in the preview window, reusing the same window."
+  (if (and (window-live-p dired-preview-window))
+      (set-window-buffer dired-preview-window buf)
+    (setq dired-preview-window
+          (display-buffer buf '(display-buffer-below-selected . ((window-height . 10)))))))
+
+(defun dired-preview-enter ()
+  "Handle pressing RET in Dired Preview Mode."
+  (interactive)
+  (let ((file (dired-get-file-for-visit)))
+    (if (file-directory-p file)
+        (dired-find-file)  ;; Normal behavior for directories
+      (progn
+        (dired-find-file)
+        (setq dired-preview-mode-active nil) ;; Disable preview mode
+        (remove-hook 'post-command-hook 'dired-preview-update t)
+        (when (window-live-p dired-preview-window)
+          (delete-window dired-preview-window))
+        (setq dired-preview-window nil))))) ;; Close preview
+
+;; Bindings
+(define-key dired-mode-map (kbd "SPC") 'dired-preview-toggle)
+(define-key dired-mode-map (kbd "RET") 'dired-preview-enter)
 
 ;; ==============================
 ;; PACKAGE MANAGEMENT
@@ -156,4 +243,6 @@
   (global-undo-tree-mode 1)
   :config
   (setq undo-tree-auto-save-history t
-        undo-tree-history-directory-alist `(("." . ,(concat user-emacs-directory "undo-tree/")))))
+        undo-tree-history-directory-alist `(("." . ,(concat user-emacs-directory "undo-tree/"))))
+  (define-key shrcts-mode-map (kbd "C-z") 'undo-tree-undo)
+  (define-key shrcts-mode-map (kbd "C-y") 'undo-tree-redo))

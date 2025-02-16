@@ -4,64 +4,69 @@
 
 *** File Operations
 
-Open a file = C-x C-f  
-Save the current file = C-x C-s  
-Save as a new file = C-x C-w  
-Exit Emacs = C-x C-c  
+| Open a file           | C-x C-f |
+| Save the current file | C-x C-s |
+| Save as a new file    | C-x C-w |
+| Exit Emacs            | C-x C-c |
 
 *** Buffer Management
 
-Switch buffer = C-x b  
-List buffers = C-x C-b  
-Kill buffer = C-x k  
+| Switch buffer | C-x b   |
+| List buffers  | C-x C-b |
+| Kill buffer   | C-x k   |
 
 *** Navigation
 
-Scroll up = C-M-p  
-Scroll down = C-M-n  
-Yank (paste) = C-v  
-Go to line = M-g g  
-Move down 1 line = C-n
-Move up 1 line = C-p
-Move down 10 lines = M-n
-Move up 10 lines = M-p
+| Scroll up                 | C-M-p |
+| Scroll down               | C-M-n |
+| Yank (paste)              | C-v   |
+| Go to line                | M-g g |
+| Move down 1 line          | C-n   |
+| Move up 1 line            | C-p   |
+| Move down 10 lines        | M-n   |
+| Move up 10 lines          | M-p   |
+| Move to beginning of file | M-S-p |
+| Move to end of file       | M-S-n |
 
 *** Editing
 
-Copy = C-c C-c
-Cut = C-c C-x
-Undo = C-z  
-Redo = C-y  
-Select next occurrence (Multiple cursors) = C-d  
-Select all: C-x h
-Select and move cursor: C-S- p/n/f/b/a/e
+| Copy                   | C-c C-c         |
+| Cut                    | C-c C-x         |
+| Undo                   | C-z             |
+| Redo                   | C-y             |
+| Select next occurrence | C-d             |
+| Select all             | C-x h           |
+| Select & move cursor   | C-S-p/n/f/b/a/e |
 
 *** Windows and Frames
 
-Close window = C-x 0 or C-w  
-Keep only current window = C-x 1  
-Split window horizontally = C-x 2  
-Split window vertically = C-x 3  
+| Close window              | C-x 0 or C-w |
+| Keep only current window  | C-x 1        |
+| Split window horizontally | C-x 2        |
+| Split window vertically   | C-x 3        |
+
 
 *** Help Shortcuts
 
-Emacs tutorial = C-h t  
-Describe keybinding = C-h k  
-Describe function = C-h f  
-Describe variable = C-h v  
-Describe current mode = C-h m  
+| Emacs tutorial        | C-h t |
+| Describe keybinding   | C-h k |
+| Describe function     | C-h f |
+| Describe variable     | C-h v |
+| Describe current mode | C-h m |
 
 ** Custom Keybindings & Changes
 
 *** Custom Keybindings
 
-Set mark = C-c RET  
-Select all occurrences (Multiple cursors) = C-c C-d  
-Move line down = ESC down  
-Move line up = ESC up  
+| Set mark                   | C-c RET  |
+| Select all occurrences     | C-c C-d  |
+| Move line down             | ESC down |
+| Move line up               | ESC up   |
 
 ** Dired
 
-Toggle hidden files = M-o  
-Set file for deletion = d
-Execute deletion = x
+| Toggle hidden files   | M-o     |
+| Set file for deletion | d       |
+| Execute deletion      | x       |
+| Create directory      | +       |
+| Create file           | C-x C-f |
