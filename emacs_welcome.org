@@ -15,7 +15,6 @@
 | Kill buffer   | C-x k   |
 | See active minor modes | M-m |
 
-
 *** Windows and Frames
 
 | Close window              | C-x 0 or C-w |
@@ -50,6 +49,7 @@
 | Select all occurrences | C-c C-d         |
 | Move line down         | ESC down        |
 | Move line up           | ESC up          |
+| Indentation settings   | C-c i           |
 
 *** Help
 

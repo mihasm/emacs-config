@@ -29,13 +29,13 @@
 
 ;; Disable default keybindings
 (global-unset-key (kbd "C-<down-mouse-1>"))
-(global-unset-key (kbd "<left>"))
-(global-unset-key (kbd "<right>"))
-(global-unset-key (kbd "<up>"))
-(global-unset-key (kbd "<down>"))
-(global-unset-key (kbd "<C-left>"))
-(global-unset-key (kbd "<C-right>"))
-(global-unset-key (kbd "<C-up>"))
+;; (global-unset-key (kbd "<left>"))
+;; (global-unset-key (kbd "<right>"))
+;; (global-unset-key (kbd "<up>"))
+;; (global-unset-key (kbd "<down>"))
+;; (global-unset-key (kbd "<C-left>"))
+;; (global-unset-key (kbd "<C-right>"))
+;; (global-unset-key (kbd "<C-up>"))
 
 ;; Customize mode line
 (setq-default mode-line-format
@@ -44,6 +44,9 @@
     "  " mode-line-position
     ;;"  " (vc-mode vc-mode)  ;; This shows Git, REMOVE IT
     "  " minions-mode-line-modes))  ;; Show hidden minor modes via Minions
+
+(defun display-startup-echo-area-message ()
+  (message "Ready"))
 
 ;; ==============================
 ;; KEYBINDINGS
@@ -87,6 +90,7 @@
 (define-key shrcts-mode-map (kbd "C-k") 'my-delete-line)
 (define-key shrcts-mode-map (kbd "M-P") 'beginning-of-buffer)
 (define-key shrcts-mode-map (kbd "M-N") 'end-of-buffer)
+(define-key shrcts-mode-map (kbd "C-x C-o") 'other-window)
 
 ;; ==============================
 ;; DIRED
@@ -196,11 +200,32 @@
 ;; INDENTATION SETTINGS
 ;; ==============================
 
-;; Use spaces instead of tabs for indentation
-(setq-default indent-tabs-mode nil)
+(defun my-set-tab-width (width)
+  "Set tab width interactively."
+  (interactive "nTab width: ")
+  (setq-default tab-width width)
+  (message "Tab width set to %d" width))
 
-;; Set the number of spaces per indentation level
-(setq-default tab-width 4)
+(defun my-toggle-indent-tabs-mode ()
+  "Toggle between spaces and tabs."
+  (interactive)
+  (setq-default indent-tabs-mode (not indent-tabs-mode))
+  (message "Using %s for indentation" (if indent-tabs-mode "tabs" "spaces")))
+
+(transient-define-prefix my-indent-menu ()
+  "Indentation settings menu."
+  [["Indentation Mode"
+    ("s" "Use Spaces" (lambda () (interactive) (setq-default indent-tabs-mode nil) (message "Using spaces")))
+    ("t" "Use Tabs" (lambda () (interactive) (setq-default indent-tabs-mode t) (message "Using tabs")))]
+   ["Tab Width"
+    ("2" "Set tab width to 2" (lambda () (interactive) (my-set-tab-width 2)))
+    ("4" "Set tab width to 4" (lambda () (interactive) (my-set-tab-width 4)))
+    ("8" "Set tab width to 8" (lambda () (interactive) (my-set-tab-width 8)))]
+   ["Other"
+    ("d" "Detect automatically (dtrt-indent)" dtrt-indent-mode)
+    ("q" "Quit" transient-quit-one)]])
+
+(global-set-key (kbd "C-c i") 'my-indent-menu)
 
 ;; Automatically detect indentation settings based on file contents
 (use-package dtrt-indent
@@ -248,6 +273,8 @@
 ;; ==============================
 ;; ADDITIONAL PACKAGES
 ;; ==============================
+
+;; Easy drag-edit
 (use-package drag-stuff
   :ensure t
   :config
@@ -257,6 +284,8 @@
   (define-key shrcts-mode-map (kbd "M-<left>") 'drag-stuff-left)
   (define-key shrcts-mode-map (kbd "M-<right>") 'drag-stuff-right))
 
+
+;; Obsidian note indexing, linking
 (use-package obsidian
   :ensure t
   :config
@@ -265,6 +294,8 @@
         obsidian-daily-notes-directory "Zapiski")
   (global-obsidian-mode t))
 
+
+;; Multiple cursors
 (use-package multiple-cursors
   :ensure t
   :bind (("C-d" . mc/mark-next-like-this)
@@ -285,6 +316,8 @@
 ;;   (add-hook 'c++-mode-hook 'eglot-ensure)
 ;;   (add-hook 'python-mode-hook 'eglot-ensure))
 
+
+;; completion package with nice menu when typing
 (use-package company
   :ensure t
   :init (global-company-mode 1)
@@ -293,12 +326,8 @@
         company-minimum-prefix-length 2)
   (add-to-list 'company-backends 'company-files))
 
-(use-package org-download :ensure t)
-(require 'org-download)
-(setq-default org-download-heading-lvl nil
-              org-download-image-dir "./images")
-(org-display-inline-images 1)
 
+;; Undo everywhere, between sessions
 (use-package undo-tree
   :ensure t
   :init
@@ -309,6 +338,8 @@
   (define-key shrcts-mode-map (kbd "C-z") 'undo-tree-undo)
   (define-key shrcts-mode-map (kbd "C-y") 'undo-tree-redo))
 
+
+;; Advanced sublime-style sidebar
 (use-package treemacs
   :ensure t
   :defer t
@@ -325,6 +356,8 @@
 
 (define-key shrcts-mode-map (kbd "M-0") 'treemacs)
 
+
+;; Hide mode panel modes into a menu
 (use-package minions
   :ensure t
   :config
@@ -336,9 +369,13 @@
             (minions-mode 1)
             (force-mode-line-update)))
 
+
+;; Pdf display in emacs!
 (use-package pdf-tools
   :ensure t)
 
+
+;; Used mainly to enable images within markdown
 (use-package markdown-mode
   :ensure t
   :config
@@ -347,6 +384,24 @@
 (setq markdown-follow-wiki-link-on-enter t)  ;; Follow link on Enter key
 
 )
+
+;; Advanced obsidian like org-mode
+(use-package org-roam
+  :ensure t
+  :custom
+  (org-roam-directory "~/Proton Drive/org-roam") ;; Change to your preferred directory
+  :config
+  (org-roam-db-autosync-mode))
+
+
+;; Can paste images into org mode files
+(use-package org-download :ensure t)
+(require 'org-download)
+(setq-default org-download-heading-lvl nil
+              org-download-image-dir "./images")
+(org-display-inline-images 1)
+
+
 
 ;; ==============================
 ;; CUSTOM MINOR MODES
