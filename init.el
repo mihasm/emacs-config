@@ -3,11 +3,9 @@
 ;; ==============================
 ;; BASIC SETTINGS
 ;; ==============================
-(use-package cus-edit
-  :config
-  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-  (when (file-exists-p custom-file)
-    (load custom-file)))
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(when (file-exists-p custom-file)
+  (load custom-file))
 (tool-bar-mode -1)
 (setq inhibit-startup-message t
       initial-scratch-message nil
@@ -22,6 +20,10 @@
 ;;(electric-indent-mode 0)
 (setq mac-command-modifier 'control)
 (setq mode-line-percent-position "") ;; Remove percentage
+(setq-default cursor-type 'bar)
+(setq shift-select-mode t)
+;;(setq scroll-preserve-screen-position t)
+(scroll-lock-mode 1)
 
 (setq gc-cons-threshold most-positive-fixnum) ;; Disable GC temporarily
 (setq gc-cons-percentage 0.6)
@@ -39,9 +41,6 @@
 
 ;; Disable default keybindings
 (global-unset-key (kbd "C-<down-mouse-1>"))
-
-(defun display-startup-echo-area-message ()
-  (message "Ready. Press Ctrl+t."))
 
 (add-hook 'emacs-startup-hook
           (lambda ()
@@ -94,6 +93,16 @@
             (lambda ()
               (interactive)
               (find-file (concat user-emacs-directory "emacs_welcome.org"))))
+
+(when (eq system-type 'darwin)  ;; Apply only on macOS
+  (define-key input-decode-map (kbd "M-ž") (kbd "\\"))
+  (define-key input-decode-map (kbd "M-Ž") (kbd "|"))
+  (define-key input-decode-map (kbd "M-<") (kbd "`"))
+  (define-key input-decode-map (kbd "M->") (kbd "~"))
+  (define-key input-decode-map (kbd "M-š") (kbd "["))
+  (define-key input-decode-map (kbd "M-đ") (kbd "]"))
+  (define-key input-decode-map (kbd "M-Š") (kbd "{"))
+  (define-key input-decode-map (kbd "M-Đ") (kbd "}")))
 
 ;; ==============================
 ;; DIRED
@@ -153,7 +162,6 @@
     (add-hook 'post-command-hook #'dired-preview-update nil t)
     (dired-preview-update)))
 
-;;;###autoload
 (define-minor-mode dired-preview-mode
   "Minor mode that auto-previews the selected file/folder in Dired."
   :lighter " dPrev"
@@ -173,7 +181,6 @@
   (define-key dired-mode-map (kbd "RET") #'dired-preview-enter))
 
 (provide 'dired-preview)
-;;; dired-preview.el ends here
 
 ;; ==============================
 ;; PACKAGE MANAGEMENT
@@ -291,11 +298,11 @@
 ;; Easy drag-edit
 (use-package drag-stuff
   :config
-  (drag-stuff-global-mode 1)
-  (define-key shrcts-mode-map (kbd "M-<down>") 'drag-stuff-down)
-  (define-key shrcts-mode-map (kbd "M-<up>") 'drag-stuff-up)
-  (define-key shrcts-mode-map (kbd "M-<left>") 'drag-stuff-left)
-  (define-key shrcts-mode-map (kbd "M-<right>") 'drag-stuff-right))
+  (drag-stuff-global-mode 1))
+(define-key shrcts-mode-map (kbd "M-<down>") 'drag-stuff-down)
+(define-key shrcts-mode-map (kbd "M-<up>") 'drag-stuff-up)
+(define-key shrcts-mode-map (kbd "M-<left>") 'drag-stuff-left)
+(define-key shrcts-mode-map (kbd "M-<right>") 'drag-stuff-right)
 
 
 ;; Obsidian note indexing, linking
@@ -303,7 +310,7 @@
   :config
   (obsidian-specify-path "~/Proton Drive/Obsidian")
   (setq obsidian-wiki-link-create-file-in-inbox nil
-        obsidian-daily-notes-directory "Zapiski")
+        obsidian-daily-notes-directory "Dnevni zapiski")
   (global-obsidian-mode t))
 
 
@@ -336,6 +343,8 @@
         company-minimum-prefix-length 2)
   (add-to-list 'company-backends 'company-files))
 
+(with-eval-after-load 'company
+  (add-to-list 'company-backends 'obsidian-company-backend))
 
 (use-package undo-tree
   :init
@@ -358,6 +367,7 @@
     (if (treemacs-current-visibility)
         (treemacs-select-window)
       (treemacs))))
+(define-key shrcts-mode-map (kbd "M-0") 'treemacs)
 
 ;; Hide mode panel modes into a menu
 (use-package minions
@@ -372,23 +382,19 @@
 ;; Pdf display in emacs!
 (use-package pdf-tools)
 
-
 ;; Used mainly to enable images within markdown
 (use-package markdown-mode
   :config
-(add-hook 'markdown-mode-hook #'markdown-toggle-inline-images)
-(setq markdown-enable-wiki-links t)  ;; Enable wiki-style links
-(setq markdown-follow-wiki-link-on-enter t)  ;; Follow link on Enter key
+  (add-hook 'markdown-mode-hook #'markdown-toggle-inline-images)
+  (setq markdown-enable-wiki-links t)  ;; Enable wiki-style links
+  (setq markdown-follow-wiki-link-on-enter t))  ;; Follow link on Enter key
 
-)
-
-;; Advanced obsidian like org-mode
+;; Advanced obsidian-like org-mode
 (use-package org-roam
   :custom
   (org-roam-directory "~/Proton Drive/org-roam") ;; Change to your preferred directory
   :config
   (org-roam-db-autosync-mode))
-
 
 ;; Can paste images into org mode files
 (use-package org-download
@@ -397,7 +403,8 @@
                 org-download-image-dir "./images")
   :hook (org-mode . org-download-enable)
   :config
-  (add-hook 'org-mode-hook #'org-display-inline-images))
+  (add-hook 'org-mode-hook #'org-display-inline-images)
+  (add-hook 'org-mode-hook (lambda () (setq org-image-actual-width nil))))
 
 ;; ==============================
 ;; CUSTOM MINOR MODES

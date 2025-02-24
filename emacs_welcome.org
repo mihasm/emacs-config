@@ -1,6 +1,6 @@
 * Welcome to Emacs!
 
-*** File Operations
+** File Operations
 
 | Open a file           | C-x C-f              |
 | Save the current file | C-x C-s              |
@@ -8,14 +8,15 @@
 | Exit Emacs            | C-x C-c              |
 | Change theme          | M-x customize-themes |
 
-*** Buffer Management
+** Buffer Management
 
-| Switch buffer | C-x b   |
-| List buffers  | C-x C-b |
-| Kill buffer   | C-x k   |
-| See active minor modes | M-m |
+| Switch buffer          | C-x b   |
+| List buffers           | C-x C-b |
+| Kill buffer            | C-x k   |
+| See active minor modes | M-m     |
+|                        |         |
 
-*** Windows and Frames
+** Windows and Frames
 
 | Close window              | C-x 0 or C-w |
 | Keep only current window  | C-x 1        |
@@ -23,7 +24,7 @@
 | Split window vertically   | C-x 3        |
 | Switch window             | C-x o        |
 
-*** Navigation
+** Navigation
 
 | Scroll up                 | C-M-p |
 | Scroll down               | C-M-n |
@@ -36,7 +37,7 @@
 | Move to beginning of file | M-S-p |
 | Move to end of file       | M-S-n |
 
-*** Editing
+** Editing
 
 | Copy                   | C-c C-c         |
 | Cut                    | C-c C-x         |
@@ -51,7 +52,7 @@
 | Move line up           | ESC up          |
 | Indentation settings   | C-c i           |
 
-*** Help
+** Help
 
 | Emacs tutorial        | C-h t |
 | Describe keybinding   | C-h k |
@@ -59,7 +60,7 @@
 | Describe variable     | C-h v |
 | Describe current mode | C-h m |
 
-*** Dired
+** Dired
 
 | Start dired mode      | C-x d   |
 | Toggle hidden files   | M-o     |
@@ -69,8 +70,51 @@
 | Create file           | C-x C-f |
 | Toggle preview mode   | SPACE   |
 
-*** Treemacs sidebar
+** Treemacs sidebar
 
 | Show sidebar   | M-0       |
 | Add project    | C-c C-p a |
 | Remove project | C-c C-p d |
+
+* Obsidian Mode
+
+** Basic Operations
+
+| Create a new note         | C-c C-n  |
+| Open a note               | C-c C-o  |
+| Insert a link to a note   | C-c C-l  |
+| Follow a link             | C-c C-f  |
+| Back to the previous note | C-c C-b  |
+| Toggle backlinks view     | C-c C-k  |
+
+
+** Navigation
+
+| Go to daily note           | C-c C-d  |
+| Open vault in Obsidian app | C-c C-v  |
+| Search notes               | C-c C-s  |
+
+
+** Editing & Formatting
+
+| Insert a Markdown link | C-c C-l  |
+| Insert a code block    | C-c C-c  |
+| Insert a heading       | C-c C-h  |
+| Insert a tag           | C-c C-t  |
+
+
+** Linking & Backlinks
+
+| Insert a link to an existing note | C-c C-l  |
+| Create and link a new note        | C-c C-n  |
+| Follow a link                     | C-c C-f  |
+| Go back to previous note          | C-c C-b  |
+| Show backlinks                    | C-c C-k  |
+
+
+** Miscellaneous
+
+| Refresh notes index      | C-c C-r  |
+| Toggle backlinks sidebar | C-c C-k  |
+| Open Obsidian settings   | C-c C-,  |
+
